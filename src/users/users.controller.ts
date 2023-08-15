@@ -6,19 +6,13 @@ import {
     NotFoundException,
     Param,
     Post,
-    // ForbiddenException,
-    // Put,
-    // UseGuards,
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { User } from './models/users.model'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserIdDto } from 'src/users/dto/user-id.dto'
-// import { isAdmin } from 'src/auth/decorators/isAdmin.decorator'
-// import { AdminGuard } from 'src/auth/guards/admin.guard'
-// import { JwtAuthGuard } from 'src/auth/guards/jwt.guard'
+import { isAdmin } from 'src/auth/decorators/is-admin.decorator'
 // import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-// import { PartialOffsetDto } from './dto/partial-offset.dto'
 
 
 // @ApiTags('users')
@@ -32,8 +26,7 @@ export class UsersController {
     ) {}
 
     @Get('/')
-    // @isAdmin()
-    // @UseGuards(AdminGuard)
+    @isAdmin()
     async getUsers(): Promise<User[]> {
         const users: User[] = await this.usersService.getUsers()
         return users
@@ -51,7 +44,6 @@ export class UsersController {
 
     // @Get('/:userId/friends')
     // @isAdmin()
-    // @UseGuards(AdminGuard)
     // async getFriendsByUserId(
     //     @Param() { userId }: UserIdDto,
     //     @Query() { offset }: PartialOffsetDto,
@@ -66,8 +58,7 @@ export class UsersController {
     // }
 
     @Post('/')
-    // @isAdmin()
-    // @UseGuards(AdminGuard)
+    @isAdmin()
     async createUser(
         @Body() dto: CreateUserDto,
     ): Promise<User> {
@@ -76,8 +67,7 @@ export class UsersController {
     }
 
     @Delete('/:userId')
-    // @isAdmin()
-    // @UseGuards(AdminGuard)
+    @isAdmin()
     async deleteUser(
         @Param() { userId }: UserIdDto,
     ): Promise<User> {

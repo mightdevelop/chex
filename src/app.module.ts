@@ -3,6 +3,8 @@ import { UsersModule } from './users/users.module'
 import { ConfigModule } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { User } from './users/models/users.model'
+import { APP_GUARD } from '@nestjs/core'
+import { AdminGuard } from './auth/guards/admin.guard'
 
 @Module({
     imports: [
@@ -24,5 +26,11 @@ import { User } from './users/models/users.model'
             retryAttempts: 0
         }),
     ],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: AdminGuard
+        }
+    ]
 })
 export class AppModule {}
