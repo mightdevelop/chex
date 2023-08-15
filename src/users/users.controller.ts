@@ -6,18 +6,20 @@ import {
     NotFoundException,
     Param,
     Post,
+    UseGuards,
 } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { User } from './models/users.model'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserIdDto } from 'src/users/dto/user-id.dto'
-import { isAdmin } from 'src/auth/decorators/is-admin.decorator'
-// import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { AdminGuard } from 'src/auth/guards/admin.guard'
 
 
-// @ApiTags('users')
-// @ApiBearerAuth('jwt')
-// @UseGuards(JwtAuthGuard)
+@ApiTags('users')
+@ApiBearerAuth('jwt')
+@UseGuards(JwtAuthGuard)
 @Controller('/users')
 export class UsersController {
 
@@ -26,7 +28,7 @@ export class UsersController {
     ) {}
 
     @Get('/')
-    @isAdmin()
+    @UseGuards(AdminGuard)
     async getUsers(): Promise<User[]> {
         const users: User[] = await this.usersService.getUsers()
         return users
@@ -42,23 +44,8 @@ export class UsersController {
         return user
     }
 
-    // @Get('/:userId/friends')
-    // @isAdmin()
-    // async getFriendsByUserId(
-    //     @Param() { userId }: UserIdDto,
-    //     @Query() { offset }: PartialOffsetDto,
-    // ): Promise<User[]> {
-    //     const user = await this.usersService.getUserById(userId)
-    //     if (!user)
-    //         throw new NotFoundException({ message: 'User not found' })
-    //     const friends: User[] = await this.usersService.getFriendsByUserId(
-    //         userId, 30, offset ? Number(offset) : undefined
-    //     )
-    //     return friends
-    // }
-
     @Post('/')
-    @isAdmin()
+    @UseGuards(AdminGuard)
     async createUser(
         @Body() dto: CreateUserDto,
     ): Promise<User> {
@@ -67,7 +54,7 @@ export class UsersController {
     }
 
     @Delete('/:userId')
-    @isAdmin()
+    @UseGuards(AdminGuard)
     async deleteUser(
         @Param() { userId }: UserIdDto,
     ): Promise<User> {

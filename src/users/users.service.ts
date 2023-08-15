@@ -1,15 +1,29 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, OnModuleInit } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Op } from 'sequelize'
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './models/users.model'
+import { ConfigService } from '@nestjs/config'
+import { hashSync } from 'bcrypt'
 
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
+
+    async onModuleInit(): Promise<void> {
+        // creates/updates the admin user
+        await this.userRepository.destroy({ where: { isAdmin: true } })
+        await this.userRepository.create({
+            username: this.configService.get('ADMIN_USERNAME'),
+            email: this.configService.get('ADMIN_EMAIL'),
+            password: hashSync(this.configService.get('ADMIN_PASSWORD'), 7),
+            isAdmin: true,
+        })
+    }
 
     constructor(
         @InjectModel(User) private userRepository: typeof User,
+        private readonly configService: ConfigService,
     ) {}
 
     async getUsers(limit?: number, offset?: number): Promise<User[]> {
