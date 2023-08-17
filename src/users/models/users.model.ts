@@ -20,6 +20,10 @@ export class User extends Model<User> {
     @Column({ type: DataType.STRING, allowNull: false })
         password: string
 
+    @ApiProperty({ type: Date })
+    @Column({ type: DataType.DATE, allowNull: false, defaultValue: DataType.NOW })
+        lastSeen: Date
+
     @ApiProperty({ type: Boolean })
     @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
         isAdmin: boolean
