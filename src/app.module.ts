@@ -4,11 +4,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { User } from './users/models/users.model'
 import { AuthModule } from './auth/auth.module'
+import { SocketIoModule } from './socketio/socketio.module'
 
 @Module({
     imports: [
         UsersModule,
         AuthModule,
+        SocketIoModule,
         ConfigModule.forRoot({
             envFilePath: '@.env',
             isGlobal: true

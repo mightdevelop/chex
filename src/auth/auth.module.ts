@@ -8,6 +8,7 @@ import { create as redisStore } from 'cache-manager-redis-store'
 import { CacheModule } from '@nestjs/cache-manager'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from 'src/users/users.module'
+import { SocketIoJwtAuthStrategy } from './strategies/socket-io-jwt-auth.strategy'
 
 
 @Module({
@@ -16,7 +17,7 @@ import { UsersModule } from 'src/users/users.module'
         AuthService,
         JwtAuthStrategy,
         JwtRefreshStrategy,
-        // SocketIoJwtAuthStrategy,
+        SocketIoJwtAuthStrategy,
     ],
     imports: [
         CacheModule.registerAsync({

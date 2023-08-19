@@ -1,18 +1,19 @@
 import {
     ConnectedSocket,
-    MessageBody,
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { UsersService } from './users.service'
-import { UserIdListDto } from './dto/user-id-list.dto'
 import { User } from './models/users.model'
+import { UseGuards } from '@nestjs/common'
+import { SocketIoJwtAuthGuard } from 'src/auth/guards/socket-io-jwt-auth.guard'
 
+@UseGuards(SocketIoJwtAuthGuard)
 @WebSocketGateway(8081, {
-    // namespace: 'users',
-    cors: { origin: '*' }
+    cors: { origin: '*' },
+    namespace: 'users',
 })
 export class UsersGateway {
 
@@ -31,24 +32,7 @@ export class UsersGateway {
         const user: User = await this.usersService.updateUserLastSeenOnline(userId)
         this.server
             .to('user:' + userId)
-            .emit('last_seen_online_update', { userId, lastSeen: user.lastSeen })
-    }
-
-    @SubscribeMessage('subscribe_on_online_of_users')
-    async subscribeOnOnlineOfUsers(
-        @MessageBody() { userIdList }: UserIdListDto,
-        @ConnectedSocket() socket: Socket,
-    ): Promise<void> {
-        const rooms: string[] = userIdList.map(userId => 'user:' + userId)
-        socket.join(rooms)
-    }
-
-    @SubscribeMessage('unsubscribe_from_online_of_users')
-    async unSubscribeFromOnlineOfUsers(
-        @MessageBody() { userIdList }: UserIdListDto,
-        @ConnectedSocket() socket: Socket,
-    ): Promise<void> {
-        userIdList.forEach(userId => socket.leave('user:' + userId))
+            .emit('update_last_seen_online', { userId, lastSeen: user.lastSeen })
     }
 
 }
