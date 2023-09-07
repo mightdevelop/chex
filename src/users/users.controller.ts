@@ -13,8 +13,8 @@ import { User } from './models/users.model'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserIdDto } from 'src/users/dto/user-id.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
-import { AdminGuard } from 'src/auth/guards/admin.guard'
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard'
+import { AdminGuard } from 'src/common/guards/admin.guard'
 
 
 @ApiTags('users')
@@ -24,7 +24,7 @@ import { AdminGuard } from 'src/auth/guards/admin.guard'
 export class UsersController {
 
     constructor(
-        private usersService: UsersService,
+        private readonly usersService: UsersService,
     ) {}
 
     @Get('/')

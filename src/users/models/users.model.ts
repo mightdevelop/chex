@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Column, DataType, Model, Table } from 'sequelize-typescript'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { Column, DataType, Model, Table, HasMany } from 'sequelize-typescript'
+import { Game } from 'src/games/models/games.model'
 
 @Table({ tableName: 'users' })
 export class User extends Model<User> {
@@ -27,5 +28,9 @@ export class User extends Model<User> {
     @ApiProperty({ type: Boolean })
     @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
         isAdmin: boolean
+
+    @ApiPropertyOptional({ type: [ Game ] })
+    @HasMany(() => Game)
+        game: Game[]
 
 }

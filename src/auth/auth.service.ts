@@ -23,9 +23,9 @@ export class AuthService {
 
     constructor(
         @Inject(CACHE_MANAGER) private store: Cache,
-        private configService: ConfigService,
-        private usersService: UsersService,
-        private jwtService: JwtService,
+        private readonly configService: ConfigService,
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async register(dto: CreateUserDto): Promise<TokensDto> {

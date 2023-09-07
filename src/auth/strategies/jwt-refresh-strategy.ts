@@ -5,8 +5,8 @@ import { Request } from 'express'
 import { UsersService } from 'src/users/users.service'
 import { User } from 'src/users/models/users.model'
 import 'dotenv/config'
-import { UserFromRequest } from '../types/user-from-request'
-import { TokenPayload } from '../types/token-payload'
+import { TokenPayload } from 'src/auth/types/token-payload'
+import { UserFromRequest } from 'src/auth/types/user-from-request'
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -14,7 +14,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
     'jwt-refresh-token'
 ) {
     constructor(
-        private usersService: UsersService,
+        private readonly usersService: UsersService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'),

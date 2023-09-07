@@ -4,13 +4,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { User } from './users/models/users.model'
 import { AuthModule } from './auth/auth.module'
-import { SocketIoModule } from './socketio/socketio.module'
+import { GamesModule } from './games/games.module'
+import { Game } from './games/models/games.model'
+import { Move } from './moves/models/moves.model'
+import { GatewayModule } from './gateway/gateway.module'
 
 @Module({
     imports: [
         UsersModule,
         AuthModule,
-        SocketIoModule,
+        GamesModule,
+        GatewayModule,
         ConfigModule.forRoot({
             envFilePath: '@.env',
             isGlobal: true
@@ -27,6 +31,8 @@ import { SocketIoModule } from './socketio/socketio.module'
                 database: configService.get('POSTGRES_DB'),
                 models: [
                     User,
+                    Game,
+                    Move,
                 ],
                 autoLoadModels: true,
                 retryAttempts: 0

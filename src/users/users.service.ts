@@ -5,8 +5,6 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './models/users.model'
 import { ConfigService } from '@nestjs/config'
 import { hashSync } from 'bcrypt'
-import { Socket } from 'socket.io'
-import { TokenPayload } from 'src/auth/types/token-payload'
 import { JwtService } from '@nestjs/jwt'
 
 
@@ -27,7 +25,7 @@ export class UsersService implements OnModuleInit {
     }
 
     constructor(
-        @InjectModel(User) private userRepository: typeof User,
+        @InjectModel(User) private readonly userRepository: typeof User,
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
     ) {}
@@ -94,21 +92,5 @@ export class UsersService implements OnModuleInit {
         await user.save()
         return user
     }
-
-    async getUserIdFromSocket(
-        socket: Socket
-    ): Promise<string> {
-        const jwtToken: string = socket.handshake.headers.authorization.split(' ')[1]
-        const tokenPayload: TokenPayload = this.jwtService.decode(jwtToken) as TokenPayload
-        return tokenPayload.id
-    }
-
-    // async getUserFromSocket(
-    //     socket: Socket
-    // ): Promise<User> {
-    //     const userId: string = await this.getUserIdFromSocket(socket)
-    //     const user: User = await this.userRepository.findByPk(userId)
-    //     return user
-    // }
 
 }

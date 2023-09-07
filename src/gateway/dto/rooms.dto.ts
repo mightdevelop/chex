@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString } from 'class-validator'
+import { IsArray, IsUUID } from 'class-validator'
 
 export class RoomsDto {
 
     @ApiProperty({ type: Array<string> })
-    @IsString({ each: true })
+    @IsArray({ each: true })
+    @IsUUID()
         rooms: string[]
 
 }

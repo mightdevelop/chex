@@ -3,13 +3,13 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { TokenPayload } from 'src/auth/types/token-payload'
 import { UsersService } from 'src/users/users.service'
-import { UserFromRequest } from '../types/user-from-request'
 import { User } from 'src/users/models/users.model'
+import { UserFromRequest } from 'src/auth/types/user-from-request'
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(
-        private usersService: UsersService,
+        private readonly usersService: UsersService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

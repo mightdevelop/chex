@@ -4,17 +4,17 @@ import { AuthService } from './auth.service'
 import { ValidateUserDto } from './dto/validate-user.dto'
 import { TokensDto } from './dto/tokens.dto'
 import { ApiTags } from '@nestjs/swagger'
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard'
+import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard'
 import { RefreshTokenDto } from './dto/refresh-token.dto'
 import { CurrentUser } from './decorators/current-user.decorator'
-import { JwtAuthGuard } from './guards/jwt-auth.guard'
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard'
 
 @ApiTags('auth')
 @Controller('/auth')
 export class AuthController {
 
     constructor(
-        private authService: AuthService,
+        private readonly authService: AuthService,
     ) {}
 
     @Post('/register')

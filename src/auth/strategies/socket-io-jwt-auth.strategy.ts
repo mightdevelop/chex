@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { UsersService } from 'src/users/users.service'
-import { UserFromRequest } from '../types/user-from-request'
-import { TokenPayload } from '../types/token-payload'
 import { User } from 'src/users/models/users.model'
+import { UserFromRequest } from 'src/auth/types/user-from-request'
+import { TokenPayload } from 'src/auth/types/token-payload'
 
 @Injectable()
 export class SocketIoJwtAuthStrategy extends PassportStrategy(Strategy, 'socket-io-jwt') {
     constructor(
-        private usersService: UsersService,
+        private readonly usersService: UsersService,
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
