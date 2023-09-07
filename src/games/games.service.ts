@@ -4,6 +4,7 @@ import { Op } from 'sequelize'
 import { CreateGameDto } from './dto/create-game.dto'
 import { Game } from './models/games.model'
 import { nanoid } from 'nanoid'
+import { UpdateFenDto } from './dto/update-fen.dto'
 
 
 @Injectable()
@@ -74,6 +75,18 @@ export class GamesService {
             throw new NotFoundException('Game not found')
 
         await game.destroy()
+        return game
+    }
+
+    async updateFen(
+        { gameId, fen }: UpdateFenDto
+    ): Promise<Game> {
+        const game: Game = await this.gameRepository.findByPk(gameId)
+        if (!game)
+            throw new NotFoundException('Game not found')
+
+        game.fen = fen
+        await game.save()
         return game
     }
 

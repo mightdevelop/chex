@@ -46,17 +46,18 @@ export class MovesService {
     async move(
         dto: CreateMoveDto
     ): Promise<Move> {
-        const chessMove: ChessMove = await this.validateMove(dto)
+        const { chessMove, fen } = await this.validateMove(dto)
         dto.playerColor = chessMove.color
         const move: Move = await this.createMove(dto)
+        await this.gamesService.updateFen({ gameId: dto.gameId, fen })
         return move
     }
 
     async validateMove(
         dto: CreateMoveDto
-    ): Promise<ChessMove> {
+    ): Promise<{ chessMove: ChessMove, fen: string }> {
         const game: Game = await this.gamesService.getGameById(dto.gameId)
-        const chess = new Chess(game.position)
+        const chess = new Chess(game.fen)
 
         const turn = chess.turn()
 
@@ -67,7 +68,7 @@ export class MovesService {
         }
 
         try {
-            return chess.move(dto.notation)
+            return { chessMove: chess.move(dto.notation), fen: chess.fen() }
         } catch {
             throw new BadRequestException('Invalid move')
         }

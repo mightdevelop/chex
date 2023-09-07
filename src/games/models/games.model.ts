@@ -35,7 +35,7 @@ export class Game extends Model<Game> {
     @ApiProperty({ type: String, format: 'fen',
         example: 'r1k4r/p2nb1p1/2b4p/1p1n1p2/2PP4/3Q1NB1/1P3PPP/R5K1 b - - 0 19' })
     @Column({ type: DataType.STRING })
-        position: string
+        fen: string
 
 
     @ApiProperty({ type: String, example: '180+0' })
