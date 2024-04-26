@@ -1,5 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { Column, DataType, Model, Table, HasMany } from 'sequelize-typescript'
+import { Column, DataType, Model, Table, HasMany, BelongsToMany } from 'sequelize-typescript'
+import { ChatUser } from 'src/chats/models/chat-user.model'
+import { Chat } from 'src/chats/models/chats.model'
 import { Game } from 'src/games/models/games.model'
 
 @Table({ tableName: 'users' })
@@ -29,8 +31,14 @@ export class User extends Model<User> {
     @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
         isAdmin: boolean
 
+
+
     @ApiPropertyOptional({ type: [ Game ] })
     @HasMany(() => Game)
-        game: Game[]
+        games: Game[]
+
+    @ApiPropertyOptional({ type: [ Chat ] })
+    @BelongsToMany(() => Chat, () => ChatUser)
+        chats: Chat[]
 
 }

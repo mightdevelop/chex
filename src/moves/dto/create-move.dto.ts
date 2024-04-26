@@ -16,9 +16,9 @@ export class CreateMoveDto {
     @IsUUID()
         playerId: string
 
-    @ApiPropertyOptional({ type: Color, format: 'uuid', example: 'ff1a1780-aff9-45c9-8025-714fb78b2cb1' })
+    @ApiPropertyOptional({ type: Color, format: '"w" or "b"', example: 'w' })
     @IsOptional()
-    @IsUUID()
+    @IsString()
         playerColor?: 'w' | 'b'
 
 }

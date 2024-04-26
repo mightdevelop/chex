@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
-import { Op } from 'sequelize'
+import { Op, Includeable, DestroyOptions } from 'sequelize'
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './models/users.model'
 import { ConfigService } from '@nestjs/config'
@@ -30,36 +30,47 @@ export class UsersService implements OnModuleInit {
         private readonly jwtService: JwtService,
     ) {}
 
-    async getUsers(limit?: number, offset?: number): Promise<User[]> {
-        const users: User[] = await this.userRepository.findAll({ limit, offset })
+    async getUsers(
+        limit?: number,
+        offset?: number,
+        include?: Includeable | Includeable[],
+    ): Promise<User[]> {
+        const users: User[] = await this.userRepository.findAll({ limit, offset, include })
         return users
     }
 
     async getUserById(
-        userId: string
+        userId: string,
+        include?: Includeable | Includeable[],
     ): Promise<User> {
-        const user: User = await this.userRepository.findByPk(userId)
+        const user: User = await this.userRepository.findByPk(userId, { include })
         return user
     }
 
     async getUsersByIdsArray(
-        usersIds: string[]
+        usersIds: string[],
+        include?: Includeable | Includeable[],
     ): Promise<User[]> {
-        const users: User[] = await this.userRepository.findAll({ where: { [Op.or]: { id: usersIds } } })
+        const users: User[] = await this.userRepository.findAll({
+            where: { [Op.or]: { id: usersIds } },
+            include,
+        })
         return users
     }
 
     async getUserByUsername(
-        username: string
+        username: string,
+        include?: Includeable | Includeable[],
     ): Promise<User> {
-        const user: User = await this.userRepository.findOne({ where: { username } })
+        const user: User = await this.userRepository.findOne({ where: { username }, include })
         return user
     }
 
     async getUserByEmail(
-        email: string
+        email: string,
+        include?: Includeable | Includeable[],
     ): Promise<User> {
-        const user: User = await this.userRepository.findOne({ where: { email } })
+        const user: User = await this.userRepository.findOne({ where: { email }, include })
         return user
     }
 
@@ -71,13 +82,14 @@ export class UsersService implements OnModuleInit {
     }
 
     async deleteUser(
-        userId: string
+        userId: string,
+        options?: DestroyOptions,
     ): Promise<User> {
         const user: User = await this.userRepository.findByPk(userId)
         if (!user)
             throw new NotFoundException('User not found')
 
-        await user.destroy()
+        await this.userRepository.destroy({ where: { id: userId }, ...options })
         return user
     }
 

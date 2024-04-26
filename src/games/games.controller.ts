@@ -15,11 +15,13 @@ import { GameIdDto } from 'src/games/dto/game-id.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard'
 import { AdminGuard } from 'src/common/guards/admin.guard'
+import { DeleteGameDto } from './dto/delete-game.dto'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { UserFromRequest } from 'src/auth/types/user-from-request'
 
 
 @ApiTags('games')
 @ApiBearerAuth('jwt')
-@UseGuards(JwtAuthGuard)
 @Controller('/games')
 export class GamesController {
 
@@ -28,7 +30,6 @@ export class GamesController {
     ) {}
 
     @Get('/')
-    @UseGuards(AdminGuard)
     async getGames(): Promise<Game[]> {
         const games: Game[] = await this.gamesService.getGames()
         return games
@@ -45,7 +46,7 @@ export class GamesController {
     }
 
     @Post('/')
-    @UseGuards(AdminGuard)
+    @UseGuards(JwtAuthGuard)
     async createGame(
         @Body() dto: CreateGameDto,
     ): Promise<Game> {
@@ -54,13 +55,23 @@ export class GamesController {
     }
 
     @Delete('/:gameId')
-    @UseGuards(AdminGuard)
+    @UseGuards(JwtAuthGuard, AdminGuard)
     async deleteGame(
-        @Param() { gameId }: GameIdDto,
+        @Param() { gameId, cascade }: DeleteGameDto,
     ): Promise<Game> {
-        const game: Game = await this.gamesService.deleteGame(gameId)
+        const game: Game = await this.gamesService.deleteGame(gameId, { cascade })
         if (!game)
             throw new NotFoundException({ message: 'Game not found' })
+        return game
+    }
+
+    @Post('/:gameId')
+    @UseGuards(JwtAuthGuard)
+    async joinGame(
+        @Param() { gameId }: GameIdDto,
+        @CurrentUser() user: UserFromRequest
+    ): Promise<Game> {
+        const game: Game = await this.gamesService.joinGame({ gameId, userId: user.id })
         return game
     }
 

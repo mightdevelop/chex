@@ -1,21 +1,24 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { IsOptional, IsString, IsUUID } from 'class-validator'
 
 export class CreateGameDto {
 
-    @ApiProperty({ type: String, format: 'uuid', example: 'ff1a1780-aff9-45c9-8025-714fb78b2cb1' })
+    @ApiPropertyOptional({ type: String, format: 'uuid', example: 'ff1a1780-aff9-45c9-8025-714fb78b2cb1' })
+    @IsOptional()
     @IsUUID()
-        whiteId: string
+        whiteId?: string
 
-    @ApiProperty({ type: String, format: 'uuid', example: 'ff1a1780-aff9-45c9-8025-714fb78b2cb1' })
+    @ApiPropertyOptional({ type: String, format: 'uuid', example: 'ff1a1780-aff9-45c9-8025-714fb78b2cb1' })
+    @IsOptional()
     @IsUUID()
-        blackId: string
+        blackId?: string
 
-    @ApiProperty({ type: String, example: '180+0' })
+    @ApiPropertyOptional({ type: String, example: '3+0' })
+    @IsOptional()
     @IsString()
-        timeControl: string
+        timeControl?: string
 
-    @ApiPropertyOptional({ type: String, example: 'Rated Blitz game' })
+    @ApiPropertyOptional({ type: String, example: 'Blitz game' })
     @IsOptional()
     @IsString()
         event?: string

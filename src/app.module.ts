@@ -8,6 +8,10 @@ import { GamesModule } from './games/games.module'
 import { Game } from './games/models/games.model'
 import { Move } from './moves/models/moves.model'
 import { GatewayModule } from './gateway/gateway.module'
+import { Chat } from './chats/models/chats.model'
+import { ChatUser } from './chats/models/chat-user.model'
+import { Message } from './messages/models/messages.model'
+import { ChatsModule } from './chats/chats.module'
 
 @Module({
     imports: [
@@ -15,6 +19,7 @@ import { GatewayModule } from './gateway/gateway.module'
         AuthModule,
         GamesModule,
         GatewayModule,
+        ChatsModule,
         ConfigModule.forRoot({
             envFilePath: '@.env',
             isGlobal: true
@@ -33,6 +38,9 @@ import { GatewayModule } from './gateway/gateway.module'
                     User,
                     Game,
                     Move,
+                    Chat,
+                    ChatUser,
+                    Message,
                 ],
                 autoLoadModels: true,
                 retryAttempts: 0
